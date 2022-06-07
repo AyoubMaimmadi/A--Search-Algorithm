@@ -45,6 +45,8 @@ public class Grid : MonoBehaviour {
 
 	void OnDrawGizmos() {
 		Gizmos.DrawWireCube(transform.position,new Vector3(gridWorldSize.x,1,gridWorldSize.y));
+
+	
 		if (grid != null) {
 			foreach (Node n in grid) {
 				Gizmos.color = (n.walkable)?Color.white:Color.red;
@@ -52,5 +54,15 @@ public class Grid : MonoBehaviour {
 			}
 		}
 	}
+}
 
+public class Node {
+	
+	public bool walkable;
+	public Vector3 worldPosition;
+	
+	public Node(bool _walkable, Vector3 _worldPos) {
+		walkable = _walkable;
+		worldPosition = _worldPos;
+	}
 }
