@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public LayerMask unwalkableMask;
+	public Vector2 gridWorldSize;
+	public float nodeRadius;
+	Node[,] grid;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    float nodeDiameter;
+	int gridSizeX, gridSizeY;
+
+	void Start() {
+		nodeDiameter = nodeRadius*2;
+		gridSizeX = Mathf.RoundToInt(gridWorldSize.x/nodeDiameter);
+		gridSizeY = Mathf.RoundToInt(gridWorldSize.y/nodeDiameter);
+		CreateGrid();
+	}
+
+
+    void OnDrawGizmos() {
+		Gizmos.DrawWireCube(transform.position,new Vector3(gridWorldSize.x,1,gridWorldSize.y));
     }
 }
