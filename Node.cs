@@ -13,5 +13,5 @@ public class Node
         walkable = _walkable;
         worldPosition = _worldPos;
     }
-
+    
 }
