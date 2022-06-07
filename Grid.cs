@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grid : MonoBehaviour
-{
-    public LayerMask unwalkableMask;
+public class Grid : MonoBehaviour {
+
+	public LayerMask unwalkableMask;
 	public Vector2 gridWorldSize;
 	public float nodeRadius;
 	Node[,] grid;
 
-    float nodeDiameter;
+	float nodeDiameter;
 	int gridSizeX, gridSizeY;
 
 	void Start() {
@@ -19,7 +19,7 @@ public class Grid : MonoBehaviour
 		CreateGrid();
 	}
 
-    void CreateGrid() {
+	void CreateGrid() {
 		grid = new Node[gridSizeX,gridSizeY];
 		Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x/2 - Vector3.forward * gridWorldSize.y/2;
 
@@ -32,7 +32,7 @@ public class Grid : MonoBehaviour
 		}
 	}
 
-    public Node NodeFromWorldPoint(Vector3 worldPosition) {
+	public Node NodeFromWorldPoint(Vector3 worldPosition) {
 		float percentX = (worldPosition.x + gridWorldSize.x/2) / gridWorldSize.x;
 		float percentY = (worldPosition.z + gridWorldSize.y/2) / gridWorldSize.y;
 		percentX = Mathf.Clamp01(percentX);
@@ -43,7 +43,7 @@ public class Grid : MonoBehaviour
 		return grid[x,y];
 	}
 
-    void OnDrawGizmos() {
+	void OnDrawGizmos() {
 		Gizmos.DrawWireCube(transform.position,new Vector3(gridWorldSize.x,1,gridWorldSize.y));
 
 	
