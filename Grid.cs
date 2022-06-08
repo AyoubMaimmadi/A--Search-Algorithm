@@ -4,9 +4,13 @@ using System.Collections.Generic;
 
 public class Grid : MonoBehaviour {
 
+	// unwalkable Mask
 	public LayerMask unwalkableMask;
+	// area of world cordinates the grid covers
 	public Vector2 gridWorldSize;
+	// how much space each node covers
 	public float nodeRadius;
+	// 2D array of nodes
 	Node[,] grid;
 
 	float nodeDiameter;
@@ -66,6 +70,7 @@ public class Grid : MonoBehaviour {
 
 	public List<Node> path;
 	void OnDrawGizmos() {
+		// draw the grid
 		Gizmos.DrawWireCube(transform.position,new Vector3(gridWorldSize.x,1,gridWorldSize.y));
 
 		if (grid != null) {
