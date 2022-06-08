@@ -1,3 +1,3 @@
 # A-Star-Search-Algorithm
 
-[](./main.PNG)
+![](./main.PNG)
