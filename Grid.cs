@@ -54,11 +54,12 @@ public class Grid : MonoBehaviour {
 				// when x = 0 and y = 0, we are checking the node itself 
 				if (x == 0 && y == 0)
 					continue;
-
+				// if the node is within the grid
 				int checkX = node.gridX + x;
 				int checkY = node.gridY + y;
-
+				// check x and y are within the grid
 				if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) {
+					// add the neighbour to the list of neighbours
 					neighbours.Add(grid[checkX,checkY]);
 				}
 			}
