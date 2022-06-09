@@ -78,13 +78,15 @@ public class Grid : MonoBehaviour {
 	void OnDrawGizmos() {
 		// draw the grid
 		Gizmos.DrawWireCube(transform.position,new Vector3(gridWorldSize.x,1,gridWorldSize.y));
-
+		// draw the nodes
 		if (grid != null) {
 			foreach (Node n in grid) {
+				// if the node is walkable draw them white otherwise red
 				Gizmos.color = (n.walkable)?Color.white:Color.red;
 				if (path != null)
 					if (path.Contains(n))
 						Gizmos.color = Color.black;
+				// draw a cube for each node
 				Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter-.1f));
 			}
 		}
