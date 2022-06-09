@@ -96,7 +96,7 @@ public class Pathfinding : MonoBehaviour {
 		}
 		// reverse the path so that it is from the start node to the end node
 		path.Reverse();
-		// set the grid's path to be the path we just found
+		// set the grid's path to be the path we just found	
 		grid.path = path;
 
 	}
