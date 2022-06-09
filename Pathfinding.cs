@@ -27,10 +27,16 @@ public class Pathfinding : MonoBehaviour {
 		// while the open set is not empty 
 		while (openSet.Count > 0) {
 			// find the node in the open set with the lowest f cost
+			// first element in the list
 			Node node = openSet[0];
+			// loop through the open set to find the node with the lowest f cost
 			for (int i = 1; i < openSet.Count; i ++) {
+				// if the f cost of the node is lower than the current node
+				// or if the f cost of the node is equal to the current node
 				if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost) {
+					// if the node has a lower h cost
 					if (openSet[i].hCost < node.hCost)
+						// set the node to be the current node
 						node = openSet[i];
 				}
 			}
