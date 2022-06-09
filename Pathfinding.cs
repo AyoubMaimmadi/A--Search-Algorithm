@@ -46,7 +46,9 @@ public class Pathfinding : MonoBehaviour {
 			closedSet.Add(node);
 			// if the node is the target node we are done
 			if (node == targetNode) {
+				// before we return the path, we need to retrace it back to the start
 				RetracePath(startNode,targetNode);
+				// return the path
 				return;
 			}
 			// other wise loop through the neighbours of the node
