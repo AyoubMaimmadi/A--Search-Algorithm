@@ -62,7 +62,7 @@ public class Grid : MonoBehaviour {
 		return neighbours;
 	}
 	
-
+	// method that returns the node at a given world position
 	public Node NodeFromWorldPoint(Vector3 worldPosition) {
 		float percentX = (worldPosition.x + gridWorldSize.x/2) / gridWorldSize.x;
 		float percentY = (worldPosition.z + gridWorldSize.y/2) / gridWorldSize.y;
@@ -75,6 +75,7 @@ public class Grid : MonoBehaviour {
 	}
 
 	public List<Node> path;
+	// draw the collision map using the gizmos method
 	void OnDrawGizmos() {
 		// draw the grid
 		Gizmos.DrawWireCube(transform.position,new Vector3(gridWorldSize.x,1,gridWorldSize.y));
