@@ -89,11 +89,14 @@ public class Pathfinding : MonoBehaviour {
 		Node currentNode = endNode;
 		// while the current node is not the start node
 		while (currentNode != startNode) {
+			// add the current node to the path
 			path.Add(currentNode);
+			// set the current node to be the parent of the current node
 			currentNode = currentNode.parent;
 		}
+		// reverse the path so that it is from the start node to the end node
 		path.Reverse();
-
+		// set the grid's path to be the path we just found
 		grid.path = path;
 
 	}
