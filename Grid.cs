@@ -34,8 +34,9 @@ public class Grid : MonoBehaviour {
 			for (int y = 0; y < gridSizeY; y ++) {
 				// As x increases, we go in increments of node diameter until we reach the edge
 				Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
-				// collision check for each point in the world
+				// collision check for each point 
 				bool walkable = !(Physics.CheckSphere(worldPoint,nodeRadius,unwalkableMask));
+				// new node with the walkable value and world position
 				grid[x,y] = new Node(walkable,worldPoint, x,y);
 			}
 		}
