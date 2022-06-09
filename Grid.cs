@@ -72,8 +72,10 @@ public class Grid : MonoBehaviour {
 		percentX = Mathf.Clamp01(percentX);
 		percentY = Mathf.Clamp01(percentY);
 		// get the x and y position of the node
+		// since the array is 0 based, we need to subtract 1 from the position
 		int x = Mathf.RoundToInt((gridSizeX-1) * percentX);
 		int y = Mathf.RoundToInt((gridSizeY-1) * percentY);
+		// return the node at the x and y position
 		return grid[x,y];
 	}
 
