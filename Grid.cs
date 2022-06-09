@@ -85,6 +85,7 @@ public class Grid : MonoBehaviour {
 		return grid[x,y];
 	}
 
+	// list of nodes that make the path
 	public List<Node> path;
 	// draw the collision map using the gizmos method
 	void OnDrawGizmos() {
@@ -95,8 +96,10 @@ public class Grid : MonoBehaviour {
 			foreach (Node n in grid) {
 				// if the node is walkable draw them white otherwise red
 				Gizmos.color = (n.walkable)?Color.white:Color.red;
+				// if the path is not null, draw the path 
 				if (path != null)
 					if (path.Contains(n))
+						// if the node is in the path, draw it in black
 						Gizmos.color = Color.black;
 				// draw a cube for each node
 				Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter-.1f));
