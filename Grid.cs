@@ -64,11 +64,14 @@ public class Grid : MonoBehaviour {
 	
 	// method that returns the node at a given world position
 	public Node NodeFromWorldPoint(Vector3 worldPosition) {
+		// get the x and y position of the world position
+		// fat right gives 1, fat left gives 0, and 0.5 for the middle
 		float percentX = (worldPosition.x + gridWorldSize.x/2) / gridWorldSize.x;
 		float percentY = (worldPosition.z + gridWorldSize.y/2) / gridWorldSize.y;
+		// make sure the percent is between 0 and 1
 		percentX = Mathf.Clamp01(percentX);
 		percentY = Mathf.Clamp01(percentY);
-
+		// get the x and y position of the node
 		int x = Mathf.RoundToInt((gridSizeX-1) * percentX);
 		int y = Mathf.RoundToInt((gridSizeY-1) * percentY);
 		return grid[x,y];
