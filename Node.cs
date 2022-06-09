@@ -10,6 +10,7 @@ public class Node {
 	public int gridX;
 	public int gridY;
 
+	// G and H cost in order to calculate the F cost
 	public int gCost;
 	public int hCost;
 	public Node parent;
@@ -22,6 +23,7 @@ public class Node {
 		gridY = _gridY;
 	}
 
+	// calculate the F cost of the node
 	public int fCost {
 		get {
 			return gCost + hCost;
