@@ -49,7 +49,7 @@ public class Pathfinding : MonoBehaviour {
 				RetracePath(startNode,targetNode);
 				return;
 			}
-
+			// other wise loop through the neighbours of the node
 			foreach (Node neighbour in grid.GetNeighbours(node)) {
 				if (!neighbour.walkable || closedSet.Contains(neighbour)) {
 					continue;
