@@ -86,6 +86,7 @@ public class Pathfinding : MonoBehaviour {
 
 	}
 
+	// returns the distance between two nodes as an integer
 	int GetDistance(Node nodeA, Node nodeB) {
 		int dstX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
 		int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
