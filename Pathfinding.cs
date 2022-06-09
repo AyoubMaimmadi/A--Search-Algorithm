@@ -12,6 +12,7 @@ public class Pathfinding : MonoBehaviour {
 	}
 
 	void Update() {
+		// find the path between the seeker and target
 		FindPath (seeker.position, target.position);
 	}
 
