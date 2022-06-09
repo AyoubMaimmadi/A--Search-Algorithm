@@ -83,9 +83,11 @@ public class Pathfinding : MonoBehaviour {
 
 	// retrace the path from the target node to the start node
 	void RetracePath(Node startNode, Node endNode) {
+		// list of nodes to be returned as the path
 		List<Node> path = new List<Node>();
+		// set the current node to be the end node
 		Node currentNode = endNode;
-
+		// while the current node is not the start node
 		while (currentNode != startNode) {
 			path.Add(currentNode);
 			currentNode = currentNode.parent;
