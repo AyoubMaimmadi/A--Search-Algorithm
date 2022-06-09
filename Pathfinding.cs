@@ -79,6 +79,7 @@ public class Pathfinding : MonoBehaviour {
 		}
 	}
 
+	// retrace the path from the target node to the start node
 	void RetracePath(Node startNode, Node endNode) {
 		List<Node> path = new List<Node>();
 		Node currentNode = endNode;
