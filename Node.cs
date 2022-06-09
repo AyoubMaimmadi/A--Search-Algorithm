@@ -14,6 +14,8 @@ public class Node {
 	// G and H cost in order to calculate the F cost
 	public int gCost;
 	public int hCost;
+
+	// parent node for the pathfinding algorithm
 	public Node parent;
 	
 	// constructor for the node class 

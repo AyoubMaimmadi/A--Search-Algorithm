@@ -68,9 +68,11 @@ public class Pathfinding : MonoBehaviour {
 					neighbour.gCost = newCostToNeighbour;
 					// calculate the new h cost of the neighbour node
 					neighbour.hCost = GetDistance(neighbour, targetNode);
+					// set the parent of the neighbour node to be the current node
 					neighbour.parent = node;
-
+					// if the neighbour is not in the open set
 					if (!openSet.Contains(neighbour))
+						// add the neighbour to the open set
 						openSet.Add(neighbour);
 				}
 			}
