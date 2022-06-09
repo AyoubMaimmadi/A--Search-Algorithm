@@ -16,6 +16,7 @@ public class Node {
 	public Node parent;
 	
 	// constructor for the node class 
+	// allows nodes to keep track of their own position in the grid
 	public Node(bool _walkable, Vector3 _worldPos, int _gridX, int _gridY) {
 		walkable = _walkable;
 		worldPosition = _worldPos;
