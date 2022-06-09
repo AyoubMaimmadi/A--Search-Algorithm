@@ -64,7 +64,9 @@ public class Pathfinding : MonoBehaviour {
 				// if the new cost is less than the neighbour's current g cost
 				// or if the neighbour is not currently in the open set
 				if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) {
+					// calculate the new g cost of the neighbour node
 					neighbour.gCost = newCostToNeighbour;
+					// calculate the new h cost of the neighbour node
 					neighbour.hCost = GetDistance(neighbour, targetNode);
 					neighbour.parent = node;
 
