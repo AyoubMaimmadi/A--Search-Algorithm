@@ -18,8 +18,9 @@ public class Pathfinding : MonoBehaviour {
 	void FindPath(Vector3 startPos, Vector3 targetPos) {
 		Node startNode = grid.NodeFromWorldPoint(startPos);
 		Node targetNode = grid.NodeFromWorldPoint(targetPos);
-
+		// List of nodes to be evaluated for the open set
 		List<Node> openSet = new List<Node>();
+		// List of nodes that have already been evaluated
 		HashSet<Node> closedSet = new HashSet<Node>();
 		openSet.Add(startNode);
 
