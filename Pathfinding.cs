@@ -22,9 +22,11 @@ public class Pathfinding : MonoBehaviour {
 		List<Node> openSet = new List<Node>();
 		// List of nodes that have already been evaluated
 		HashSet<Node> closedSet = new HashSet<Node>();
+		// add the start node to the open set
 		openSet.Add(startNode);
-
+		// while the open set is not empty 
 		while (openSet.Count > 0) {
+			// find the node in the open set with the lowest f cost
 			Node node = openSet[0];
 			for (int i = 1; i < openSet.Count; i ++) {
 				if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost) {
