@@ -42,6 +42,7 @@ public class Grid : MonoBehaviour {
 		}
 	}
 
+	// returs list of nodes 
 	public List<Node> GetNeighbours(Node node) {
 		List<Node> neighbours = new List<Node>();
 

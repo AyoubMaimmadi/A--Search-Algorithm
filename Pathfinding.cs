@@ -50,6 +50,8 @@ public class Pathfinding : MonoBehaviour {
 				return;
 			}
 			// other wise loop through the neighbours of the node
+			// there is an 8 way connection between nodes in average
+			// but if it is on the edge of the grid it will have less
 			foreach (Node neighbour in grid.GetNeighbours(node)) {
 				if (!neighbour.walkable || closedSet.Contains(neighbour)) {
 					continue;
