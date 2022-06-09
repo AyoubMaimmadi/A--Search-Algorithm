@@ -88,11 +88,15 @@ public class Pathfinding : MonoBehaviour {
 
 	// returns the distance between two nodes as an integer
 	int GetDistance(Node nodeA, Node nodeB) {
+		// the distance between two nodes is the square root of the sum 
+		// of the squares of the difference in x and y
 		int dstX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
 		int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
-
+		// return the distance between the two nodes
 		if (dstX > dstY)
+		// return the distance between the two nodes
 			return 14*dstY + 10* (dstX-dstY);
+		// return the distance between the two nodes
 		return 14*dstX + 10 * (dstY-dstX);
 	}
 } 
