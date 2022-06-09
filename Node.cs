@@ -7,6 +7,7 @@ public class Node {
 	public bool walkable;
 	// what point in the world this node represents
 	public Vector3 worldPosition;
+	// x and y position in the grid
 	public int gridX;
 	public int gridY;
 
