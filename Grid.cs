@@ -44,10 +44,14 @@ public class Grid : MonoBehaviour {
 
 	// returs list of nodes that are neighbours of the node 
 	public List<Node> GetNeighbours(Node node) {
+		// list of empty neighbours
 		List<Node> neighbours = new List<Node>();
 
 		for (int x = -1; x <= 1; x++) {
 			for (int y = -1; y <= 1; y++) {
+				// if the node is not the node itself
+				// because we are searching in a 3x3 grid around the node
+				// when x = 0 and y = 0, we are checking the node itself 
 				if (x == 0 && y == 0)
 					continue;
 
