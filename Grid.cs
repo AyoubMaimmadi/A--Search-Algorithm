@@ -13,6 +13,7 @@ public class Grid : MonoBehaviour {
 	// 2D array of nodes
 	Node[,] grid;
 
+	// how many nodes can we fit in the grid based on the world size and node radius
 	float nodeDiameter;
 	int gridSizeX, gridSizeY;
 
