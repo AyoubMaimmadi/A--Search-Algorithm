@@ -64,7 +64,7 @@ public class Grid : MonoBehaviour {
 				}
 			}
 		}
-
+		// return the list of neighbours
 		return neighbours;
 	}
 	
