@@ -13,10 +13,10 @@ public class Grid : MonoBehaviour {
 	// 2D array of nodes
 	Node[,] grid;
 
-	// how many nodes can we fit in the grid based on the world size and node radius
 	float nodeDiameter;
 	int gridSizeX, gridSizeY;
 
+	// how many nodes can we fit in the grid based on the node radius
 	void Awake() {
 		nodeDiameter = nodeRadius*2;
 		gridSizeX = Mathf.RoundToInt(gridWorldSize.x/nodeDiameter);
@@ -24,6 +24,7 @@ public class Grid : MonoBehaviour {
 		CreateGrid();
 	}
 
+	// create the grid 
 	void CreateGrid() {
 		grid = new Node[gridSizeX,gridSizeY];
 		Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x/2 - Vector3.forward * gridWorldSize.y/2;
