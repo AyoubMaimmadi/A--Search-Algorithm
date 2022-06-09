@@ -40,10 +40,11 @@ public class Pathfinding : MonoBehaviour {
 						node = openSet[i];
 				}
 			}
-
+			// remove the node from the open set
 			openSet.Remove(node);
+			// add the node to the closed set
 			closedSet.Add(node);
-
+			// if the node is the target node we are done
 			if (node == targetNode) {
 				RetracePath(startNode,targetNode);
 				return;
