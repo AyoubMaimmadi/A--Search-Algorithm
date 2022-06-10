@@ -70,6 +70,7 @@ public class Grid : MonoBehaviour {
 	}
 	
 	// method that returns the node at a given world position
+	// where the node is placed in the grid
 	public Node NodeFromWorldPoint(Vector3 worldPosition) {
 		// get the x and y position of the world position
 		// fat right gives 1, fat left gives 0, and 0.5 for the middle
