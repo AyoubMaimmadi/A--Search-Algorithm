@@ -153,52 +153,81 @@ public class Pathfinding : MonoBehaviour
 		}
 	}
 
-	
+	// find the path using the A* Euclidian algorithm 
 	void FindPathAstarEuclidian(Vector3 startPos, Vector3 targetPos)
 	{
+		// set the start node to the node at the start position and
+		// set the target node to the node at the target position
 		Node startNode = grid.NodeFromWorldPoint(startPos);
 		Node targetNode = grid.NodeFromWorldPoint(targetPos);
 
+		// create the open and closed lists for the A* Euclidian algorithm
 		List<Node> openSet = new List<Node>();
 		HashSet<Node> closedSet = new HashSet<Node>();
+		// add the start node to the open list
 		openSet.Add(startNode);
 
+		// while the open list is not empty
 		while (openSet.Count > 0)
-		{
+		{	
+			// find the node in the open set with the lowest f cost
+			// first element in the list
 			Node node = openSet[0];
+			// loop through the open set to find the node with the lowest f cost
 			for (int i = 1; i < openSet.Count; i++)
 			{
+				// if the f cost of the node is lower than the current node
+				// or if the f cost of the node is equal to the current node
 				if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost)
 				{
+					// if the node has a lower h cost
 					if (openSet[i].hCost < node.hCost)
+						// set the node to be the current node
 						node = openSet[i];
 				}
 			}
 
+			// remove the current node from the open list
 			openSet.Remove(node);
+			// add the current node to the closed list
 			closedSet.Add(node);
 
+			// if the node is the target node we are done
 			if (node == targetNode)
 			{
+				// before we return the path, we need to retrace it back to the start
 				RetracePathAstarEuclidian(startNode, targetNode);
+				// return the path
 				return;
 			}
 
+			// other wise loop through the neighbours of the node
+			// there is an 8 way connection between nodes in average
+			// but if it is on the edge of the grid it will have less
 			foreach (Node neighbour in grid.GetNeighbours(node))
 			{
+				// if the neighbour is not walkable or if it is in the closed set
 				if (!neighbour.walkable || closedSet.Contains(neighbour))
 				{
+					// skip to the next neighbour
 					continue;
 				}
 
+				// calculate the g cost of the neighbour node
 				int newCostToNeighbour = node.gCost + GetDistanceEuclidian(node, neighbour);
+				// if the new cost is less than the neighbour's current g cost
+				// or if the neighbour is not currently in the open set
 				if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
 				{
+					// calculate the new g cost of the neighbour node
 					neighbour.gCost = newCostToNeighbour;
+					// calculate the new h cost of the neighbour node
 					neighbour.hCost = GetDistanceEuclidian(neighbour, targetNode);
+					// set the parent of the neighbour node to be the current node
 					neighbour.parent = node;
-
+					// if the neighbour is not in the open set
 					if (!openSet.Contains(neighbour))
+
 						openSet.Add(neighbour);
 				}
 			}
