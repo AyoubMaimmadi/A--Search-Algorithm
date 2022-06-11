@@ -5,11 +5,16 @@ using System.Collections.Generic;
 
 public class Grid : MonoBehaviour
 {
+	// unwalkable Mask
 	public LayerMask unwalkableMask;
+	// area of world cordinates the grid covers
 	public Vector2 gridWorldSize;
+	// how much space each node covers
 	public float nodeRadius;
+	// 2D array of nodes
 	Node[,] grid;
 
+	// to know how many nodes can we fit in the grid
 	float nodeDiameter;
 	int gridSizeX, gridSizeY;
 
@@ -19,6 +24,7 @@ public class Grid : MonoBehaviour
 	public List<Node> pathBFS;
 	public List<Node> pathUCS;
 
+	// how many nodes can we fit in the grid based on the node radius
 	void Awake()
 	{
 		nodeDiameter = nodeRadius * 2;
