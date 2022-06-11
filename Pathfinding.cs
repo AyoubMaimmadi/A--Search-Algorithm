@@ -285,58 +285,80 @@ public class Pathfinding : MonoBehaviour
 	}
 
 
+	// find the path using the breadth first search algorithm
 	void FindPathBFS(Vector3 startPos, Vector3 targetPos)
 	{
-
+		// set the start node to the node at the start position and
 		Node startNode = grid.NodeFromWorldPoint(startPos);
 		Node targetNode = grid.NodeFromWorldPoint(targetPos);
+		// set the queue and open list for the BFS algorithm
 		Queue<Node> queueBFS = new Queue<Node>();
 		HashSet<Node> closedSet = new HashSet<Node>();
+		// enqueue the start node to the queue
 		queueBFS.Enqueue(startNode);
 
+		// while the queue is not empty
 		while (queueBFS.Count != 0)
 		{
+			// dequeue the first node from the queue
 			Node currentNode = queueBFS.Dequeue();
+			// if the node is the target node we are done
 			if (currentNode == targetNode)
 			{
+				// before we return the path, we need to retrace it back to the start
 				RetracePathBFS(startNode, targetNode);
+				// return the path
 				return;
 			}
+			// add the current node to the closed list
 			closedSet.Add(currentNode);
+
+			// loop through the neighbours of the current node
 			foreach (Node neighbour in grid.GetNeighbours(currentNode))
 			{
+				// if the neighbour is not walkable or if it is in the closed list
 				if (!neighbour.walkable || closedSet.Contains(neighbour))
 				{
+					// skip to the next neighbour
 					continue;
 				}
+				// if the neighbour is not in the queue or walkable
 				if (neighbour.walkable || !queueBFS.Contains(neighbour))
 				{
+					// add the neighbour to the closed list
 					closedSet.Add(neighbour);
+					// set the parent of the neighbour node to be the current node
 					neighbour.parent = currentNode;
+					// enqueue the neighbour node to the queue
 					queueBFS.Enqueue(neighbour);
 				}
 			}
 		}
 	}
 
-
+	// retrace the path using the uniform cost search algorithm
 	void FindPathUCS(Vector3 startPos, Vector3 targetPos)
 	{
-
+		// set the start node to the node at the start position and
 		Node startNode = grid.NodeFromWorldPoint(startPos);
 		Node targetNode = grid.NodeFromWorldPoint(targetPos);
-
+		// set the open and closed set for the UCS algorithm 
 		List<Node> openSet = new List<Node>();
 		HashSet<Node> closedSet = new HashSet<Node>();
+		// add the start node to the open set
 		openSet.Add(startNode);
 
+		// while the open set is not empty
 		while (openSet.Count > 0)
 		{
+			// find the node with the lowest f cost
 			Node node = openSet[0];
 			for (int i = 1; i < openSet.Count; i++)
-			{
+			{	
+				// if the f cost of the current node is less than the f cost of the node in the open set
 				if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost)
 				{
+					// if the h cost of the current node is less than the h cost of the node in the open set
 					if (openSet[i].hCost < node.hCost)
 						node = openSet[i];
 				}
@@ -366,7 +388,11 @@ public class Pathfinding : MonoBehaviour
 					neighbour.parent = node;
 
 					if (!openSet.Contains(neighbour))
+					{
+						// add the neighbour to the open set
 						openSet.Add(neighbour);
+					}
+						
 				}
 			}
 		}
@@ -393,18 +419,25 @@ public class Pathfinding : MonoBehaviour
 		grid.pathAstarManhattan = path;
 	}
 
+	// retrace the path from the target node to the start node for A* Euclidean distance
 	void RetracePathAstarEuclidian(Node startNode, Node endNode)
 	{
+		// list of nodes to be returned as the path
 		List<Node> path = new List<Node>();
+		// set the current node to be the end node
 		Node currentNode = endNode;
-
+		// while the current node is not the start node
 		while (currentNode != startNode)
 		{
+			// add the current node to the path
 			path.Add(currentNode);
+			// set the current node to be the parent of the current node
 			currentNode = currentNode.parent;
 			countAstarEuclidian++;
 		}
+		// reverse the path so that it is from the start node to the end node
 		path.Reverse();
+		// set the grid's path to be the path we just found
 		grid.pathAstarEuclidian = path;
 	}
 
