@@ -456,16 +456,21 @@ public class Pathfinding : MonoBehaviour
 		grid.pathDFS = path;
 	}
 
-
+	// returns the distance between two nodes as an integer (Manhattan distance)
 	int GetDistanceManhattan(Node nodeA, Node nodeB)
 	{
+		// the distance between two nodes is the square root of the sum 
+		// of the squares of the difference in x and y
 		int dstX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
 		int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
+		// return the distance between the two nodes
 		return dstX + dstY;
 	}
 
+	// returns the distance between two nodes as an integer (Euclidian distance)
 	int GetDistanceEuclidian(Node nodeA, Node nodeB)
 	{
+		// return the distance between the two nodes
 		return (int)Mathf.Sqrt((Mathf.Pow(nodeA.gridX - nodeB.gridX, 2) + Mathf.Pow(nodeA.gridY - nodeB.gridY, 2)));
 	}
 }
