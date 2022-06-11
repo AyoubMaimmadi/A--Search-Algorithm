@@ -11,8 +11,8 @@ Green -> Breadth First Search
 Blue -> Depth First Search
 Black -> Uniform Cost Search
 ```
-![](./Assets/4.PNG)
+![](./ScreenShots/4.PNG)
 
-![](./Assets/5.PNG)
+![](./ScreenShots/5.PNG)
 
-![](./Assets/1.PNG)
+![](./ScreenShots/1.PNG)
