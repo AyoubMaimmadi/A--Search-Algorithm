@@ -234,33 +234,50 @@ public class Pathfinding : MonoBehaviour
 		}
 	}
 
+	// find the path using the depth first search algorithm
 	void FindPathDFS(Vector3 startPos, Vector3 targetPos)
 	{
+		// set the start node to the node at the start position and
 		Node startNode = grid.NodeFromWorldPoint(startPos);
 		Node targetNode = grid.NodeFromWorldPoint(targetPos);
+		// set the stack and open list for the DFS algorithm
 		Stack<Node> StackDFS = new Stack<Node>();
 		HashSet<Node> closedSet = new HashSet<Node>();
+		// push the start node to the stack
 		StackDFS.Push(startNode);
 
+		// while the stack is not empty
 		while (StackDFS.Count != 0)
 		{
+			// pop the top node from the stack
 			Node currentNode = StackDFS.Pop();
+			// if the node is the target node we are done
 			if (currentNode == targetNode)
 			{
+				// before we return the path, we need to retrace it back to the start
 				RetracePathDFS(startNode, targetNode);
+				// return the path
 				return;
 			}
+			// add the current node to the closed list
 			closedSet.Add(currentNode);
+			// loop through the neighbours of the current node
 			foreach (Node neighbour in grid.GetNeighbours(currentNode))
 			{
+				// if the neighbour is not walkable or if it is in the closed list
 				if (!neighbour.walkable || closedSet.Contains(neighbour))
 				{
+					// skip to the next neighbour
 					continue;
 				}
+				// if the neighbour is not in the stack or walkable
 				if (neighbour.walkable || !StackDFS.Contains(neighbour))
 				{
+					// add the neighbour to the closed list
 					closedSet.Add(neighbour);
+					// set the parent of the neighbour node to be the current node
 					neighbour.parent = currentNode;
+					// push the neighbour node to the stack	
 					StackDFS.Push(neighbour);
 				}
 			}
@@ -355,19 +372,24 @@ public class Pathfinding : MonoBehaviour
 		}
 	}
 
-
+	// retrace the path from the target node to the start node for A* Manhattan distance
 	void RetracePathAstarManhattan(Node startNode, Node endNode)
 	{
+		// list of nodes to be returned as the path
 		List<Node> path = new List<Node>();
+		// set the current node to be the end node
 		Node currentNode = endNode;
-
+		// while the current node is not the start node
 		while (currentNode != startNode)
 		{
+			// add the current node to the path
 			path.Add(currentNode);
+			// set the current node to be the parent of the current node
 			currentNode = currentNode.parent;
 			countAstarManhattan++;
 		}
 		path.Reverse();
+		// reverse the path so that it is from the start node to the end node
 		grid.pathAstarManhattan = path;
 	}
 
