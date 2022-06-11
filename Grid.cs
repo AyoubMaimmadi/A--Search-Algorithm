@@ -52,29 +52,31 @@ public class Grid : MonoBehaviour
 	}
 
 
-	public List<Node> GetNeighbours(Node node)
-	{
+	// returs list of nodes that are neighbours of the node 
+	public List<Node> GetNeighbours(Node node) {
+		// list of empty neighbours
 		List<Node> neighbours = new List<Node>();
 
-		for (int x = -1; x <= 1; x++)
-		{
-			for (int y = -1; y <= 1; y++)
-			{
+		for (int x = -1; x <= 1; x++) {
+			for (int y = -1; y <= 1; y++) {
+				// if the node is not the node itself
+				// because we are searching in a 3x3 grid around the node
+				// when x = 0 and y = 0, we are checking the node itself 
 				if (x == 0 && y == 0)
 					continue;
-
+				// if the node is within the grid
 				int checkX = node.gridX + x;
 				int checkY = node.gridY + y;
-
-				if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY)
-				{
-					neighbours.Add(grid[checkX, checkY]);
+				// check x and y are within the grid
+				if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) {
+					// add the neighbour to the list of neighbours
+					neighbours.Add(grid[checkX,checkY]);
 				}
 			}
 		}
+		// return the list of neighbours
 		return neighbours;
 	}
-
 
 	public Node NodeFromWorldPoint(Vector3 worldPosition)
 	{
