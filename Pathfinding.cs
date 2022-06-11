@@ -19,89 +19,134 @@ public class Pathfinding : MonoBehaviour
 		grid = GetComponent<Grid>();
 	}
 
+	// find the path between the seeker and target using various search algorithms
 	void Update()
 	{
+		// count the number of nodes in the path for each algorithm
 		countAstarManhattan = 0;
 		countAstarEuclidian = 0;
 		countUCS = 0;
 		countBFS = 0;
 		countDFS = 0;
 
+		// using a stop watch to measure the time it takes to find the path
 		var watchAstarManhattan = new System.Diagnostics.Stopwatch();
 		var watchAstarEuclidian = new System.Diagnostics.Stopwatch();
 		var watchUCS = new System.Diagnostics.Stopwatch();
 		var watchBFS = new System.Diagnostics.Stopwatch();
 		var watchDFS = new System.Diagnostics.Stopwatch();
 
+		// start the stop watch for the A* Manhattan algorithm
 		watchAstarManhattan.Start();
+		// find the path using the A* Manhattan heuristic
 		FindPathAstarManhattan(seeker.position, target.position);
+		// stop the stop watch
 		watchAstarManhattan.Stop();
 
+		// start the stop watch for the A* Euclidian algorithm
 		watchAstarEuclidian.Start();
+		// find the path using the A* Euclidian heuristic
 		FindPathAstarEuclidian(seeker.position, target.position);
+		// stop the stop watch
 		watchAstarEuclidian.Stop();
 
+		// start the stop watch for the UCS algorithm
 		watchUCS.Start();
+		// find the path using the UCS heuristic
 		FindPathUCS(seeker.position, target.position);
+		// stop the stop watch
 		watchUCS.Stop();
 
+		// start the stop watch for the BFS algorithm
 		watchBFS.Start();
+		// find the path using the BFS heuristic
 		FindPathBFS(seeker.position, target.position);
+		// stop the stop watch
 		watchBFS.Stop();
 
+		// start the stop watch for the DFS algorithm
 		watchDFS.Start();
+		// find the path using the DFS heuristic
 		FindPathDFS(seeker.position, target.position);
+		// stop the stop watch
 		watchDFS.Stop();
 
+		// output the time taken for each search algorithm in the console
 		Debug.Log($"Execution Time A* Euclidian: {watchAstarEuclidian.ElapsedMilliseconds} ms, retracement : {countAstarEuclidian}\nExecution Time A* Manhattan: {watchAstarManhattan.ElapsedMilliseconds} ms, retracement : {countAstarManhattan}\nExecution Time UCS: {watchUCS.ElapsedMilliseconds} ms, retracement : {countUCS}\nExecution Time BFS: {watchBFS.ElapsedMilliseconds} ms, retracement : {countBFS}\nExecution Time DFS: {watchDFS.ElapsedMilliseconds} ms, retracement : {countDFS}");
 	}
 
 
+	// find the path using the A* Manhattan algorithm 
 	void FindPathAstarManhattan(Vector3 startPos, Vector3 targetPos)
 	{
+		// set the start node to the node at the start position and 
+		// set the target node to the node at the target position
 		Node startNode = grid.NodeFromWorldPoint(startPos);
 		Node targetNode = grid.NodeFromWorldPoint(targetPos);
 
+		// create the open and closed lists for the A* Manhattan algorithm
 		List<Node> openSet = new List<Node>();
 		HashSet<Node> closedSet = new HashSet<Node>();
+		// add the start node to the open list
 		openSet.Add(startNode);
 
+		// while the open list is not empty
 		while (openSet.Count > 0)
 		{
+			// find the node in the open set with the lowest f cost
+			// first element in the list
 			Node node = openSet[0];
+			// loop through the open set to find the node with the lowest f cost
 			for (int i = 1; i < openSet.Count; i++)
 			{
+				// if the f cost of the node is lower than the current node
+				// or if the f cost of the node is equal to the current node
 				if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost)
 				{
+					// if the node has a lower h cost
 					if (openSet[i].hCost < node.hCost)
+						// set the node to be the current node
 						node = openSet[i];
 				}
 			}
-
+			// remove the current node from the open list
 			openSet.Remove(node);
+			// add the current node to the closed list
 			closedSet.Add(node);
-
+			// if the node is the target node we are done
 			if (node == targetNode)
 			{
+				// before we return the path, we need to retrace it back to the start
 				RetracePathAstarManhattan(startNode, targetNode);
+				// return the path
 				return;
 			}
-
+			// other wise loop through the neighbours of the node
+			// there is an 8 way connection between nodes in average
+			// but if it is on the edge of the grid it will have less
 			foreach (Node neighbour in grid.GetNeighbours(node))
 			{
+				// if the neighbour is not walkable or if it is in the closed set
 				if (!neighbour.walkable || closedSet.Contains(neighbour))
 				{
+					// skip to the next neighbour
 					continue;
 				}
-
+				// calculate the g cost of the neighbour node
 				int newCostToNeighbour = node.gCost + GetDistanceManhattan(node, neighbour);
+				// if the new cost is less than the neighbour's current g cost
+				// or if the neighbour is not currently in the open set
 				if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
 				{
+					// calculate the new g cost of the neighbour node
 					neighbour.gCost = newCostToNeighbour;
+					// calculate the new h cost of the neighbour node
 					neighbour.hCost = GetDistanceManhattan(neighbour, targetNode);
+					// set the parent of the neighbour node to be the current node
 					neighbour.parent = node;
-
+					// if the neighbour is not in the open set
 					if (!openSet.Contains(neighbour))
+						// add the neighbour to the open set
 						openSet.Add(neighbour);
 				}
 			}
