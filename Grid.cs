@@ -18,6 +18,7 @@ public class Grid : MonoBehaviour
 	float nodeDiameter;
 	int gridSizeX, gridSizeY;
 
+	// list of nodes that make the path to the target for each algorithm
 	public List<Node> pathAstarManhattan;
 	public List<Node> pathAstarEuclidian;
 	public List<Node> pathDFS;
@@ -96,50 +97,67 @@ public class Grid : MonoBehaviour
 		return grid[x,y];
 	}
 
-
+	// draw the collision map using the gizmos method
 	void OnDrawGizmos()
 	{
+		// draw the grid
 		Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
+		// if there is a depth first search path to draw
 		if (pathDFS != null)
 		{
 			foreach (Node n in pathDFS)
 			{
+			// set the color to blue
 				Gizmos.color = Color.blue;
+				// draw the DFS path from the seeker node to the target node
 				Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - .1f));
 			}
 		}
 
+		// if there is an A* Manhatten search path to draw
 		if (pathAstarManhattan != null)
 		{
 			foreach (Node n in pathAstarManhattan)
 			{
+				// set the color to red
 				Gizmos.color = Color.red;
+				// draw the A* Manhattan path from the seeker node to the target node
 				Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - .1f));
 			}
 		}
 
+		// if there is an A* Euclidian search path to draw
 		if (pathAstarEuclidian != null)
 		{
 			foreach (Node n in pathAstarEuclidian)
 			{
+				// set the color to white
 				Gizmos.color = Color.white;
+				// draw the A* Euclidian path from the seeker node to the target node
 				Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - .1f));
 			}
 		}
 
+		// if there is a breath first search path to draw
 		if (pathBFS != null)
 		{
 			foreach (Node n in pathBFS)
 			{
+				// set the color to green
 				Gizmos.color = Color.green;
+				// draw the BFS path from the seeker node to the target node
 				Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - .1f));
 			}
 		}
+
+		// if there is a Uniformed Cost search path to draw
 		if (pathUCS != null)
 		{
 			foreach (Node n in pathUCS)
 			{
+				// set the color to black
 				Gizmos.color = Color.black;
+				// draw the UCS path from the seeker node to the target node
 				Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - .1f));
 			}
 		}
