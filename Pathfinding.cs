@@ -1,118 +1,374 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
-public class Pathfinding : MonoBehaviour {
 
+public class Pathfinding : MonoBehaviour
+{
 	public Transform seeker, target;
 	Grid grid;
+	int countAstarManhattan = 0;
+	int countAstarEuclidian = 0;
+	int countUCS = 0;
+	int countBFS = 0;
+	int countDFS = 0;
 
-	void Awake() {
-		grid = GetComponent<Grid> ();
+	void Awake()
+	{
+		grid = GetComponent<Grid>();
 	}
 
-	void Update() {
-		// find the path between the seeker and target.
-		FindPath (seeker.position, target.position);
+	void Update()
+	{
+		countAstarManhattan = 0;
+		countAstarEuclidian = 0;
+		countUCS = 0;
+		countBFS = 0;
+		countDFS = 0;
+
+		var watchAstarManhattan = new System.Diagnostics.Stopwatch();
+		var watchAstarEuclidian = new System.Diagnostics.Stopwatch();
+		var watchUCS = new System.Diagnostics.Stopwatch();
+		var watchBFS = new System.Diagnostics.Stopwatch();
+		var watchDFS = new System.Diagnostics.Stopwatch();
+
+		watchAstarManhattan.Start();
+		FindPathAstarManhattan(seeker.position, target.position);
+		watchAstarManhattan.Stop();
+
+		watchAstarEuclidian.Start();
+		FindPathAstarEuclidian(seeker.position, target.position);
+		watchAstarEuclidian.Stop();
+
+		watchUCS.Start();
+		FindPathUCS(seeker.position, target.position);
+		watchUCS.Stop();
+
+		watchBFS.Start();
+		FindPathBFS(seeker.position, target.position);
+		watchBFS.Stop();
+
+		watchDFS.Start();
+		FindPathDFS(seeker.position, target.position);
+		watchDFS.Stop();
+
+		Debug.Log($"Execution Time A* Euclidian: {watchAstarEuclidian.ElapsedMilliseconds} ms, retracement : {countAstarEuclidian}\nExecution Time A* Manhattan: {watchAstarManhattan.ElapsedMilliseconds} ms, retracement : {countAstarManhattan}\nExecution Time UCS: {watchUCS.ElapsedMilliseconds} ms, retracement : {countUCS}\nExecution Time BFS: {watchBFS.ElapsedMilliseconds} ms, retracement : {countBFS}\nExecution Time DFS: {watchDFS.ElapsedMilliseconds} ms, retracement : {countDFS}");
 	}
 
-	void FindPath(Vector3 startPos, Vector3 targetPos) {
+
+	void FindPathAstarManhattan(Vector3 startPos, Vector3 targetPos)
+	{
 		Node startNode = grid.NodeFromWorldPoint(startPos);
 		Node targetNode = grid.NodeFromWorldPoint(targetPos);
-		// List of nodes to be evaluated for the open set
+
 		List<Node> openSet = new List<Node>();
-		// List of nodes that have already been evaluated
 		HashSet<Node> closedSet = new HashSet<Node>();
-		// add the start node to the open set
 		openSet.Add(startNode);
-		// while the open set is not empty 
-		while (openSet.Count > 0) {
-			// find the node in the open set with the lowest f cost
-			// first element in the list
+
+		while (openSet.Count > 0)
+		{
 			Node node = openSet[0];
-			// loop through the open set to find the node with the lowest f cost
-			for (int i = 1; i < openSet.Count; i ++) {
-				// if the f cost of the node is lower than the current node
-				// or if the f cost of the node is equal to the current node
-				if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost) {
-					// if the node has a lower h cost
+			for (int i = 1; i < openSet.Count; i++)
+			{
+				if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost)
+				{
 					if (openSet[i].hCost < node.hCost)
-						// set the node to be the current node
 						node = openSet[i];
 				}
 			}
-			// remove the node from the open set
+
 			openSet.Remove(node);
-			// add the node to the closed set
 			closedSet.Add(node);
-			// if the node is the target node we are done
-			if (node == targetNode) {
-				// before we return the path, we need to retrace it back to the start
-				RetracePath(startNode,targetNode);
-				// return the path
+
+			if (node == targetNode)
+			{
+				RetracePathAstarManhattan(startNode, targetNode);
 				return;
 			}
-			// other wise loop through the neighbours of the node
-			// there is an 8 way connection between nodes in average
-			// but if it is on the edge of the grid it will have less
-			foreach (Node neighbour in grid.GetNeighbours(node)) {
-				// if the neighbour is not walkable or if it is in the closed set
-				if (!neighbour.walkable || closedSet.Contains(neighbour)) {
-					// skip to the next neighbour
+
+			foreach (Node neighbour in grid.GetNeighbours(node))
+			{
+				if (!neighbour.walkable || closedSet.Contains(neighbour))
+				{
 					continue;
 				}
 
-				// calculate the g cost of the neighbour node
-				int newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
-				// if the new cost is less than the neighbour's current g cost
-				// or if the neighbour is not currently in the open set
-				if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) {
-					// calculate the new g cost of the neighbour node
+				int newCostToNeighbour = node.gCost + GetDistanceManhattan(node, neighbour);
+				if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+				{
 					neighbour.gCost = newCostToNeighbour;
-					// calculate the new h cost of the neighbour node
-					neighbour.hCost = GetDistance(neighbour, targetNode);
-					// set the parent of the neighbour node to be the current node
+					neighbour.hCost = GetDistanceManhattan(neighbour, targetNode);
 					neighbour.parent = node;
-					// if the neighbour is not in the open set
+
 					if (!openSet.Contains(neighbour))
-						// add the neighbour to the open set
 						openSet.Add(neighbour);
 				}
 			}
 		}
 	}
 
-	// retrace the path from the target node to the start node
-	void RetracePath(Node startNode, Node endNode) {
-		// list of nodes to be returned as the path
-		List<Node> path = new List<Node>();
-		// set the current node to be the end node
-		Node currentNode = endNode;
-		// while the current node is not the start node
-		while (currentNode != startNode) {
-			// add the current node to the path
-			path.Add(currentNode);
-			// set the current node to be the parent of the current node
-			currentNode = currentNode.parent;
-		}
-		// reverse the path so that it is from the start node to the end node
-		path.Reverse();
-		// set the grid's path to be the path we just found	
-		grid.path = path;
+	void FindPathAstarEuclidian(Vector3 startPos, Vector3 targetPos)
+	{
+		Node startNode = grid.NodeFromWorldPoint(startPos);
+		Node targetNode = grid.NodeFromWorldPoint(targetPos);
 
+		List<Node> openSet = new List<Node>();
+		HashSet<Node> closedSet = new HashSet<Node>();
+		openSet.Add(startNode);
+
+		while (openSet.Count > 0)
+		{
+			Node node = openSet[0];
+			for (int i = 1; i < openSet.Count; i++)
+			{
+				if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost)
+				{
+					if (openSet[i].hCost < node.hCost)
+						node = openSet[i];
+				}
+			}
+
+			openSet.Remove(node);
+			closedSet.Add(node);
+
+			if (node == targetNode)
+			{
+				RetracePathAstarEuclidian(startNode, targetNode);
+				return;
+			}
+
+			foreach (Node neighbour in grid.GetNeighbours(node))
+			{
+				if (!neighbour.walkable || closedSet.Contains(neighbour))
+				{
+					continue;
+				}
+
+				int newCostToNeighbour = node.gCost + GetDistanceEuclidian(node, neighbour);
+				if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+				{
+					neighbour.gCost = newCostToNeighbour;
+					neighbour.hCost = GetDistanceEuclidian(neighbour, targetNode);
+					neighbour.parent = node;
+
+					if (!openSet.Contains(neighbour))
+						openSet.Add(neighbour);
+				}
+			}
+		}
 	}
 
-	// returns the distance between two nodes as an integer
-	int GetDistance(Node nodeA, Node nodeB) {
-		// the distance between two nodes is the square root of the sum 
-		// of the squares of the difference in x and y
+	void FindPathDFS(Vector3 startPos, Vector3 targetPos)
+	{
+		Node startNode = grid.NodeFromWorldPoint(startPos);
+		Node targetNode = grid.NodeFromWorldPoint(targetPos);
+		Stack<Node> StackDFS = new Stack<Node>();
+		HashSet<Node> closedSet = new HashSet<Node>();
+		StackDFS.Push(startNode);
+
+		while (StackDFS.Count != 0)
+		{
+			Node currentNode = StackDFS.Pop();
+			if (currentNode == targetNode)
+			{
+				RetracePathDFS(startNode, targetNode);
+				return;
+			}
+			closedSet.Add(currentNode);
+			foreach (Node neighbour in grid.GetNeighbours(currentNode))
+			{
+				if (!neighbour.walkable || closedSet.Contains(neighbour))
+				{
+					continue;
+				}
+				if (neighbour.walkable || !StackDFS.Contains(neighbour))
+				{
+					closedSet.Add(neighbour);
+					neighbour.parent = currentNode;
+					StackDFS.Push(neighbour);
+				}
+			}
+		}
+	}
+
+
+	void FindPathBFS(Vector3 startPos, Vector3 targetPos)
+	{
+
+		Node startNode = grid.NodeFromWorldPoint(startPos);
+		Node targetNode = grid.NodeFromWorldPoint(targetPos);
+		Queue<Node> queueBFS = new Queue<Node>();
+		HashSet<Node> closedSet = new HashSet<Node>();
+		queueBFS.Enqueue(startNode);
+
+		while (queueBFS.Count != 0)
+		{
+			Node currentNode = queueBFS.Dequeue();
+			if (currentNode == targetNode)
+			{
+				RetracePathBFS(startNode, targetNode);
+				return;
+			}
+			closedSet.Add(currentNode);
+			foreach (Node neighbour in grid.GetNeighbours(currentNode))
+			{
+				if (!neighbour.walkable || closedSet.Contains(neighbour))
+				{
+					continue;
+				}
+				if (neighbour.walkable || !queueBFS.Contains(neighbour))
+				{
+					closedSet.Add(neighbour);
+					neighbour.parent = currentNode;
+					queueBFS.Enqueue(neighbour);
+				}
+			}
+		}
+	}
+
+
+	void FindPathUCS(Vector3 startPos, Vector3 targetPos)
+	{
+
+		Node startNode = grid.NodeFromWorldPoint(startPos);
+		Node targetNode = grid.NodeFromWorldPoint(targetPos);
+
+		List<Node> openSet = new List<Node>();
+		HashSet<Node> closedSet = new HashSet<Node>();
+		openSet.Add(startNode);
+
+		while (openSet.Count > 0)
+		{
+			Node node = openSet[0];
+			for (int i = 1; i < openSet.Count; i++)
+			{
+				if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost)
+				{
+					if (openSet[i].hCost < node.hCost)
+						node = openSet[i];
+				}
+			}
+
+			openSet.Remove(node);
+			closedSet.Add(node);
+
+			if (node == targetNode)
+			{
+				RetracePathUCS(startNode, targetNode);
+				return;
+			}
+
+			foreach (Node neighbour in grid.GetNeighbours(node))
+			{
+				if (!neighbour.walkable || closedSet.Contains(neighbour))
+				{
+					continue;
+				}
+
+				int newCostToNeighbour = node.gCost;
+				if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+				{
+					neighbour.gCost = newCostToNeighbour;
+					neighbour.hCost = 0;
+					neighbour.parent = node;
+
+					if (!openSet.Contains(neighbour))
+						openSet.Add(neighbour);
+				}
+			}
+		}
+	}
+
+
+	void RetracePathAstarManhattan(Node startNode, Node endNode)
+	{
+		List<Node> path = new List<Node>();
+		Node currentNode = endNode;
+
+		while (currentNode != startNode)
+		{
+			path.Add(currentNode);
+			currentNode = currentNode.parent;
+			countAstarManhattan++;
+		}
+		path.Reverse();
+		grid.pathAstarManhattan = path;
+	}
+
+	void RetracePathAstarEuclidian(Node startNode, Node endNode)
+	{
+		List<Node> path = new List<Node>();
+		Node currentNode = endNode;
+
+		while (currentNode != startNode)
+		{
+			path.Add(currentNode);
+			currentNode = currentNode.parent;
+			countAstarEuclidian++;
+		}
+		path.Reverse();
+		grid.pathAstarEuclidian = path;
+	}
+
+
+	void RetracePathUCS(Node startNode, Node endNode)
+	{
+		List<Node> path = new List<Node>();
+		Node currentNode = endNode;
+
+		while (currentNode != startNode)
+		{
+			path.Add(currentNode);
+			currentNode = currentNode.parent;
+			countUCS++;
+		}
+		path.Reverse();
+		grid.pathUCS = path;
+	}
+
+
+	void RetracePathBFS(Node startNode, Node endNode)
+	{
+		List<Node> path = new List<Node>();
+		Node currentNode = endNode;
+
+		while (currentNode != startNode)
+		{
+			path.Add(currentNode);
+			currentNode = currentNode.parent;
+			countBFS++;
+		}
+		path.Reverse();
+		grid.pathBFS = path;
+	}
+
+
+	void RetracePathDFS(Node startNode, Node endNode)
+	{
+		List<Node> path = new List<Node>();
+		Node currentNode = endNode;
+
+		while (currentNode != startNode)
+		{
+			path.Add(currentNode);
+			currentNode = currentNode.parent;
+			countDFS++;
+		}
+		path.Reverse();
+		grid.pathDFS = path;
+	}
+
+
+	int GetDistanceManhattan(Node nodeA, Node nodeB)
+	{
 		int dstX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
 		int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
-		// return the distance between the two nodes
-		if (dstX > dstY)
-		// return the distance between the two nodes
-			return 14*dstY + 10* (dstX-dstY);
-		// return the distance between the two nodes
-		return 14*dstX + 10 * (dstY-dstX);
+		return dstX + dstY;
 	}
-} 
+
+	int GetDistanceEuclidian(Node nodeA, Node nodeB)
+	{
+		return (int)Mathf.Sqrt((Mathf.Pow(nodeA.gridX - nodeB.gridX, 2) + Mathf.Pow(nodeA.gridY - nodeB.gridY, 2)));
+	}
+}
