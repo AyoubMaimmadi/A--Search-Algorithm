@@ -15,5 +15,3 @@ Black -> Uniform Cost Search
 ![](./Assets/1.PNG)
 
 ![](./Assets/4.PNG)
-
-![](./Assets/2.PNG)
