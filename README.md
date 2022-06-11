@@ -2,7 +2,7 @@
 
 Me and my teamate `Hamza Ammad` have improved the code of @SebLague algorithm for finding the shortest path between a target and a start point in Unity. We have added new algorithms to the code such as A-Star-Search-Algorithm using the Manhattan and Euclidean distances , Depth-First-Search-Algorithm, Breadth-First-Search-Algorithm, and Uniformed Cost-Search-Algorithm.
 
-Check out @SebLague's Video here: [Live](https://www.youtube.com/watch?v=-L-WgKMFuhE&list=PLFt_AvWsXl0cq5Umv3pMC9SPnKjfp9eGW)
+Check out @SebLague's on [YouTube](https://www.youtube.com/watch?v=-L-WgKMFuhE&list=PLFt_AvWsXl0cq5Umv3pMC9SPnKjfp9eGW) and [GitHub](https://github.com/SebLague/Pathfinding).
 
 ```
 White -> A* Euclidian Search
