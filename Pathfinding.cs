@@ -153,6 +153,7 @@ public class Pathfinding : MonoBehaviour
 		}
 	}
 
+	
 	void FindPathAstarEuclidian(Vector3 startPos, Vector3 targetPos)
 	{
 		Node startNode = grid.NodeFromWorldPoint(startPos);
