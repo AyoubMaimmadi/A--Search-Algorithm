@@ -363,30 +363,37 @@ public class Pathfinding : MonoBehaviour
 						node = openSet[i];
 				}
 			}
-
+			// remove the node from the open set
 			openSet.Remove(node);
+			// add the node to the closed set
 			closedSet.Add(node);
-
+			// if the node is the target node we are done
 			if (node == targetNode)
 			{
+				// before we return the path, we need to retrace it back to the start
 				RetracePathUCS(startNode, targetNode);
+				// return the path
 				return;
 			}
-
+			// loop through the neighbours of the current node
 			foreach (Node neighbour in grid.GetNeighbours(node))
 			{
+				// if the neighbour is not walkable or if it is in the closed list
 				if (!neighbour.walkable || closedSet.Contains(neighbour))
 				{
+					// skip to the next neighbour
 					continue;
 				}
-
 				int newCostToNeighbour = node.gCost;
+				// if the neighbour is not in the open set or walkable
 				if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
 				{
+					// set the g cost of the neighbour node to be the new cost to the neighbour node
 					neighbour.gCost = newCostToNeighbour;
 					neighbour.hCost = 0;
+					// set the parent of the neighbour node to be the current node
 					neighbour.parent = node;
-
+					// if the neighbour is not in the open set
 					if (!openSet.Contains(neighbour))
 					{
 						// add the neighbour to the open set
@@ -487,19 +494,25 @@ public class Pathfinding : MonoBehaviour
 		grid.pathBFS = path;
 	}
 
-
+	// retrace the path from the target node to the start node for A* Manhattan distance
 	void RetracePathDFS(Node startNode, Node endNode)
 	{
+		// list of nodes to be returned as the path
 		List<Node> path = new List<Node>();
+		// set the current node to be the end node
 		Node currentNode = endNode;
-
+		// while the current node is not the start node
 		while (currentNode != startNode)
 		{
+			// add the current node to the path
 			path.Add(currentNode);
+			// set the current node to be the parent of the current node
 			currentNode = currentNode.parent;
 			countDFS++;
 		}
+		// reverse the path so that it is from the start node to the end node
 		path.Reverse();
+		// set the grid's path to be the path we just found
 		grid.pathDFS = path;
 	}
 
