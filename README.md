@@ -14,3 +14,5 @@ Black -> Uniform Cost Search
 ![](./Report/4.PNG)
 
 ![](./Report/5.PNG)
+
+![](./Report/3.jpeg)
