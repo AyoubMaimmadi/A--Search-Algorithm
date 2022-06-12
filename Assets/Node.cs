@@ -18,7 +18,7 @@ public class Node {
 	// parent node for the pathfinding algorithm
 	public Node parent;
 	
-	// constructor for the node class 
+	// constructor for the node classs
 	// allows nodes to keep track of their own position in the grid
 	public Node(bool _walkable, Vector3 _worldPos, int _gridX, int _gridY) {
 		walkable = _walkable;
